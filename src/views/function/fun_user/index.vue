@@ -140,7 +140,7 @@
           <el-input v-model="form.phone" placeholder="请输入联系电话" />
         </el-form-item>
         <el-form-item label="头像" prop="avatarUrl">
-          <image-upload v-model="form.avatarUrl"/>
+          <image-upload :limit="1" v-model="form.avatarUrl"/>
         </el-form-item>
         <el-form-item label="权限等级" prop="userLevel">
           <el-radio-group v-model="form.userLevel">
@@ -287,6 +287,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["fun_userRef"].validate(valid => {
     if (valid) {
+      console.log("form：",form.value)
       if (form.value.id != null) {
         updateFun_user(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");

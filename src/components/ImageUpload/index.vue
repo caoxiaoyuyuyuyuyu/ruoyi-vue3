@@ -78,9 +78,13 @@ const number = ref(0);
 const uploadList = ref([]);
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
-const baseUrl = import.meta.env.VITE_APP_BASE_API;
+// const baseUrl = import.meta.env.VITE_APP_BASE_API;
+const baseUrl = "http://localhost:8080";
 const uploadImgUrl = ref(import.meta.env.VITE_APP_BASE_API + "/common/upload"); // 上传的图片服务器地址
+// const uploadImgUrl = "https://william.fit:8080/api/upload"; // 上传的图片服务器地址
 const headers = ref({ Authorization: "Bearer " + getToken() });
+// const headers = ref({ Authorization:
+// "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybGV2ZWwiOiIxIiwib3BlbmlkIjoib3JtVFM1QTZPUFVyZnpFVW1VTDJnU296dTd5NCIsImlkIjoyLCJ1c2VyaWQiOiIyMDIyMTEwNzA1MDEiLCJleHAiOjE3MjM4MjI0OTd9.7ycNiDL6V90NaLAzDUoUdlz2JhC-54fxKR_H7Opemn4"});
 const fileList = ref([]);
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
@@ -92,12 +96,18 @@ watch(() => props.modelValue, val => {
     const list = Array.isArray(val) ? val : props.modelValue.split(",");
     // 然后将数组转为对象数组
     fileList.value = list.map(item => {
+      console.log("item：",item)
       if (typeof item === "string") {
+        console.log("typeof item：",typeof item)
+        console.log("baseUrl：",baseUrl)
+        console.log("item.indexOf(baseUrl)：",item.indexOf(baseUrl))
         if (item.indexOf(baseUrl) === -1) {
           item = { name: baseUrl + item, url: baseUrl + item };
         } else {
           item = { name: item, url: item };
         }
+        console.log("++item：",item)
+
       }
       return item;
     });
@@ -109,6 +119,7 @@ watch(() => props.modelValue, val => {
 
 // 上传前loading加载
 function handleBeforeUpload(file) {
+  console.log("file：",file)
   let isImg = false;
   if (props.fileType.length) {
     let fileExtension = "";
@@ -147,6 +158,8 @@ function handleExceed() {
 
 // 上传成功回调
 function handleUploadSuccess(res, file) {
+  console.log("res：",res)
+  console.log("file：",file)
   if (res.code === 200) {
     uploadList.value.push({ name: res.fileName, url: res.fileName });
     uploadedSuccessfully();
@@ -173,15 +186,23 @@ function handleDelete(file) {
 function uploadedSuccessfully() {
   if (number.value > 0 && uploadList.value.length === number.value) {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value);
+    for (let i = 0; i < fileList.value.length; i++) {
+      //每一项的url属性添加头
+      fileList.value[i].url = baseUrl + fileList.value[i].url;
+      //每一项的name属性添加头
+      fileList.value[i].name = baseUrl + fileList.value[i].name;
+    }
     uploadList.value = [];
     number.value = 0;
+    console.log("fileList：",listToString(fileList.value))
     emit("update:modelValue", listToString(fileList.value));
     proxy.$modal.closeLoading();
   }
 }
 
 // 上传失败
-function handleUploadError() {
+function handleUploadError(err) {
+  console.log("err：",err)
   proxy.$modal.msgError("上传图片失败");
   proxy.$modal.closeLoading();
 }
@@ -198,7 +219,8 @@ function listToString(list, separator) {
   separator = separator || ",";
   for (let i in list) {
     if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
-      strs += list[i].url.replace(baseUrl, "") + separator;
+      // strs += list[i].url.replace(baseUrl, "") + separator;//去除baseUrl
+      strs += list[i].url + separator;
     }
   }
   return strs != "" ? strs.substr(0, strs.length - 1) : "";
