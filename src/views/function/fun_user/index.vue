@@ -73,6 +73,15 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+            type="info"
+            plain
+            icon="Upload"
+            @click="handleImport"
+            v-hasPermi="['system:user:import']"
+        >导入</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="warning"
           plain
           icon="Download"
@@ -169,11 +178,14 @@
         </div>
       </template>
     </el-dialog>
+  <import-dialog :upload="upload" />
   </div>
+
 </template>
 
 <script setup name="Fun_user">
 import { listFun_user, getFun_user, delFun_user, addFun_user, updateFun_user } from "@/api/function/fun_user";
+import { getToken } from "@/utils/auth";
 
 const { proxy } = getCurrentInstance();
 const { fun_user_level } = proxy.useDict('fun_user_level');
@@ -218,6 +230,21 @@ const data = reactive({
 });
 
 const { queryParams, form, rules } = toRefs(data);
+
+const upload = reactive({
+  // 是否显示弹出层（用户导入）
+  open: false,
+  // 弹出层标题（用户导入）
+  title: "默认",
+  // 是否禁用上传
+  isUploading: false,
+  // 是否更新已经存在的用户数据
+  updateSupport: 0,
+  // 设置上传的请求头部
+  headers: { Authorization: "Bearer " + getToken() },
+  // 上传的地址
+  url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData"
+});
 
 /** 查询学生信息列表 */
 function getList() {
@@ -321,6 +348,18 @@ function handleDelete(row) {
     getList();
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
+}
+
+/** 导入按钮操作 */
+function handleImport() {
+  console.log("/** 导入按钮操作 */")
+  upload.title = "学生导入";
+  upload.open = true;
+};
+
+function onUpdate(){
+  console.log("/** 更新列表监听 */")
+  getList();
 }
 
 /** 导出按钮操作 */

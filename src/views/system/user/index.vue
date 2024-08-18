@@ -315,7 +315,7 @@
                      <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据
                   </div>
                   <span>仅允许导入xls、xlsx格式文件。</span>
-                  <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
+                  <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate(proxy)">下载模板</el-link>
                </div>
             </template>
          </el-upload>
@@ -331,7 +331,7 @@
 
 <script setup name="User">
 import { getToken } from "@/utils/auth";
-import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user";
+import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect, importTemplate } from "@/api/system/user";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -511,11 +511,7 @@ function handleImport() {
   upload.title = "用户导入";
   upload.open = true;
 };
-/** 下载模板操作 */
-function importTemplate() {
-  proxy.download("system/user/importTemplate", {
-  }, `user_template_${new Date().getTime()}.xlsx`);
-};
+
 /**文件上传中处理 */
 const handleFileUploadProgress = (event, file, fileList) => {
   upload.isUploading = true;
@@ -601,6 +597,7 @@ function submitForm() {
     }
   });
 };
+
 
 getDeptTree();
 getList();

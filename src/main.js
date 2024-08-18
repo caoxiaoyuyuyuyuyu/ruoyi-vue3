@@ -39,6 +39,8 @@ import FileUpload from "@/components/FileUpload"
 import ImageUpload from "@/components/ImageUpload"
 // 图片上传组件副本
 import ImageUploadCopy from "@/components/ImageUploadCopy"
+//导入对话框组件
+import ImportDialog from "@/components/ImportDialog"
 
 // 图片预览组件
 import ImagePreview from "@/components/ImagePreview"
@@ -66,6 +68,7 @@ app.component('TreeSelect', TreeSelect)
 app.component('FileUpload', FileUpload)
 app.component('ImageUpload', ImageUpload)
 app.component('ImageUploadCopy', ImageUploadCopy)
+app.component('ImportDialog', ImportDialog)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('Editor', Editor)

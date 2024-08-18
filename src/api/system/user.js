@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { parseStrEmpty } from "@/utils/ruoyi";
-
+// import { getToken } from "@/utils/auth";
 // 查询用户列表
 export function listUser(query) {
   return request({
