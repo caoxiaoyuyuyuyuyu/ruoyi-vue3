@@ -86,7 +86,11 @@
     <el-table v-loading="loading" :data="fun_userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="openid" align="center" prop="openid" />
+      <el-table-column label="标题" align="center">
+        <template #default="scope">
+         {{ scope.row.openid? '已绑定' : '未绑定' }}
+        </template>
+      </el-table-column>
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="姓名" align="center" prop="trueName" />
       <el-table-column label="学号" align="center" prop="userid" />
@@ -139,8 +143,11 @@
         <el-form-item label="联系电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入联系电话" />
         </el-form-item>
-        <el-form-item label="头像" prop="avatarUrl">
+        <!-- <el-form-item label="头像" prop="avatarUrl">
           <image-upload :limit="1" v-model="form.avatarUrl"/>
+        </el-form-item> -->
+        <el-form-item label="头像" prop="avatarUrl">
+          <image-upload-copy :limit="1" v-model="form.avatarUrl"/>
         </el-form-item>
         <el-form-item label="权限等级" prop="userLevel">
           <el-radio-group v-model="form.userLevel">

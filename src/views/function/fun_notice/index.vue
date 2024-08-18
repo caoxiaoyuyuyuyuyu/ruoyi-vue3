@@ -90,8 +90,16 @@
     <el-table v-loading="loading" :data="fun_noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="标题" align="center">
+        <template #default="scope">
+         {{ truncateText(scope.row.title, 10) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="内容" align="center">
+        <template #default="scope">
+         {{ truncateText(scope.row.content, 10) }}
+        </template>
+      </el-table-column>
       <el-table-column label="类型" align="center" prop="typeName">
         <template #default="scope">
           <dict-tag :options="fun_notice_type" :value="scope.row.typeName"/>
@@ -216,6 +224,11 @@ const data = reactive({
 });
 
 const { queryParams, form, rules } = toRefs(data);
+function truncateText(text, maxLength) {
+  // console.log("text: ",text)
+  // console.log("typeof text: ",typeof text)
+  return text ? text.length > maxLength ? `${text.substring(0, maxLength)}...` : text : "";
+}
 
 /** 查询学校通知列表 */
 function getList() {

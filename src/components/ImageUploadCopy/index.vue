@@ -1,24 +1,25 @@
 <template>
   <div class="component-upload-image">
     <el-upload
-      multiple
-      :action="uploadImgUrl"
-      list-type="picture-card"
-      :on-success="handleUploadSuccess"
-      :before-upload="handleBeforeUpload"
-      :limit="limit"
-      :on-error="handleUploadError"
-      :on-exceed="handleExceed"
       ref="imageUpload"
-      :before-remove="handleDelete"
+      multiple
       :show-file-list="true"
-      :headers="headers"
-      :file-list="fileList"
+      list-type="picture-card"
+      :limit="limit"
+      :auto-upload="true"
+      :http-request="handleUpload"
+      :before-upload="handleBeforeUpload"
+      :on-exceed="handleExceed"
+      :on-success="handleUploadSuccess"
+      :on-error="handleUploadError"
+      :before-remove="handleDelete"
       :on-preview="handlePictureCardPreview"
+      :file-list="fileList"
       :class="{ hide: fileList.length >= limit }"
     >
       <el-icon class="avatar-uploader-icon"><plus /></el-icon>
     </el-upload>
+    <!-- <el-button @click="submitUpload" type="primary">单击上传</el-button> -->
     <!-- 上传提示 -->
     <div class="el-upload__tip" v-if="showTip">
       请上传
@@ -72,7 +73,7 @@ const props = defineProps({
     default: true
   },
 });
-
+const imageUpload = ref(null);
 const { proxy } = getCurrentInstance();
 const emit = defineEmits();
 const number = ref(0);
@@ -83,7 +84,7 @@ const dialogVisible = ref(false);
 // const baseUrl = "http://localhost:8080";
 const baseUrl = import.meta.env.VITE_APP_ASSETS_PATH
 const uploadImgUrl = ref(import.meta.env.VITE_APP_BASE_API + "/common/upload"); // 上传的图片服务器地址
-// const uploadImgUrl = "https://william.fit:8080/api/upload"; // 上传的图片服务器地址
+// const uploadImgUrl = "https://william.fit:8889/tencentcloud/www/static"; // 上传的图片服务器地址
 const headers = ref({ Authorization: "Bearer " + getToken() });
 // const headers = ref({ Authorization:
 // "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybGV2ZWwiOiIxIiwib3BlbmlkIjoib3JtVFM1QTZPUFVyZnpFVW1VTDJnU296dTd5NCIsImlkIjoyLCJ1c2VyaWQiOiIyMDIyMTEwNzA1MDEiLCJleHAiOjE3MjM4MjI0OTd9.7ycNiDL6V90NaLAzDUoUdlz2JhC-54fxKR_H7Opemn4"});
@@ -91,7 +92,7 @@ const fileList = ref([]);
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
 );
-
+console.log("uploadImgUrl：",uploadImgUrl.value)
 watch(() => props.modelValue, val => {
   if (val) {
     // 首先将值转为数组
@@ -100,10 +101,10 @@ watch(() => props.modelValue, val => {
     fileList.value = list.map(item => {
       console.log("item：",item)
       if (typeof item === "string") {
-        console.log("typeof item：",typeof item)
-        console.log("baseUrl：",baseUrl)
-        console.log("uploadImgUrl：",uploadImgUrl.value)
-        console.log("item.indexOf(baseUrl)：",item.indexOf(baseUrl))
+        console.log("item：",item)
+        // console.log("baseUrl：",baseUrl)
+        // console.log("uploadImgUrl：",uploadImgUrl.value)
+        // console.log("item.indexOf(baseUrl)：",item.indexOf(baseUrl))
         if (item.indexOf(baseUrl) === -1) {
           if(item.startsWith("https://") || item.startsWith("http://")){
               item = { name: item, url: item };
@@ -123,7 +124,44 @@ watch(() => props.modelValue, val => {
     return [];
   }
 },{ deep: true, immediate: true });
-
+// const submitUpload = () => {
+//   imageUpload.value.submit();
+// };
+// function handleChange(e) {
+//   console.log("Change, e：",e)
+// }
+function handleUpload(e) {
+  console.log("Upload, file：",e.file)
+  const formData = new FormData();
+  formData.append('file', e.file);
+  formData.append('userid', "202211070501");
+  // const formData = new FormData();
+  // formData.append('file', params.file);
+  // // 自定义上传逻辑
+  fetch('https://localhost:8082/upload/updateAvatar', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    // 如果服务器返回的是JSON数据
+    return response.json(); 
+    // 如果服务器返回的是纯文本
+    // return response.text();
+})
+  .then((data) => {
+    console.log('上传成功:', data);
+    // 触发上传成功的回调
+    e.onSuccess(data, e.file, [e.file]);
+  })
+  .catch((error) => {
+    console.error('上传失败:', error);
+    // 触发上传失败的回调
+    e.onError(error, e.file, [e.file]);
+  });
+}
 // 上传前loading加载
 function handleBeforeUpload(file) {
   console.log("file：",file)
@@ -166,8 +204,9 @@ function handleExceed() {
 // 上传成功回调
 function handleUploadSuccess(res, file) {
   console.log("res：",res)
-  console.log("file：",file)
-  if (res.code === 200) {
+  // console.log("file：",file)
+  if (res.msg === "操作成功") {
+    console.log("res.msg ===",res.msg)
     uploadList.value.push({ name: res.fileName, url: res.fileName });
     uploadedSuccessfully();
   } else {
@@ -194,10 +233,13 @@ function uploadedSuccessfully() {
   if (number.value > 0 && uploadList.value.length === number.value) {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value);
     for (let i = 0; i < fileList.value.length; i++) {
-      //每一项的url属性添加头
-      fileList.value[i].url = baseUrl + fileList.value[i].url;
-      //每一项的name属性添加头
-      fileList.value[i].name = baseUrl + fileList.value[i].name;
+      if(fileList.value[i].url.startsWith("https://") || fileList.value[i].url.startsWith("http://")){
+      }else{
+        //每一项的url属性添加头
+        fileList.value[i].url = baseUrl + fileList.value[i].url;
+        //每一项的name属性添加头
+        fileList.value[i].name = baseUrl + fileList.value[i].name;
+      }
     }
     uploadList.value = [];
     number.value = 0;
