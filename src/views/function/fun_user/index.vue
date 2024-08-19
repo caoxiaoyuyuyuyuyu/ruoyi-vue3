@@ -178,7 +178,7 @@
         </div>
       </template>
     </el-dialog>
-  <import-dialog :upload="upload" />
+  <import-dialog :upload="upload" @update="getList" />
   </div>
 
 </template>
@@ -248,6 +248,7 @@ const upload = reactive({
 
 /** 查询学生信息列表 */
 function getList() {
+  console.log("查询学生信息列表")
   loading.value = true;
   listFun_user(queryParams.value).then(response => {
     fun_userList.value = response.rows;
@@ -356,11 +357,6 @@ function handleImport() {
   upload.title = "学生导入";
   upload.open = true;
 };
-
-function onUpdate(){
-  console.log("/** 更新列表监听 */")
-  getList();
-}
 
 /** 导出按钮操作 */
 function handleExport() {

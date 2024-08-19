@@ -331,7 +331,7 @@
 
 <script setup name="User">
 import { getToken } from "@/utils/auth";
-import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect, importTemplate } from "@/api/system/user";
+import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -511,7 +511,12 @@ function handleImport() {
   upload.title = "用户导入";
   upload.open = true;
 };
-
+/** 下载模板操作 */
+function importTemplate() {
+  console.log("/** 下载模板操作 */") 
+  proxy.download("system/user/importTemplate", {
+ }, `user_template_${new Date().getTime()}.xlsx`);
+};
 /**文件上传中处理 */
 const handleFileUploadProgress = (event, file, fileList) => {
   upload.isUploading = true;
