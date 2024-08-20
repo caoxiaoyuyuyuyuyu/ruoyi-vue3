@@ -78,10 +78,13 @@ const showTip = computed(
 );
 
 watch(() => props.modelValue, val => {
+  console.log("**watch","  val: ",val);
+  console.log("modelValue: ",props.modelValue);
   if (val) {
     let temp = 1;
     // 首先将值转为数组
-    const list = Array.isArray(val) ? val : props.modelValue.split(',');
+    const list = Array.isArray(val) ? val : props.modelValue.startsWith('[')?props.modelValue.slice(1,props.modelValue.length-1).split(','):props.modelValue.split(',')
+    console.log("list: ",list);
     // 然后将数组转为对象数组
     fileList.value = list.map(item => {
       if (typeof item === "string") {

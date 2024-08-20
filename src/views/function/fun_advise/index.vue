@@ -145,10 +145,10 @@
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="fun_adviseRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="学号" prop="stuId">
-          <el-input v-model="form.stuId" placeholder="请输入学号" />
+          <span>{{form.stuId}}</span>
         </el-form-item>
         <el-form-item label="描述" prop="describes">
-          <el-input v-model="form.describes" placeholder="请输入描述" />
+          <span>{{ form.describes }}</span>
         </el-form-item>
         <el-form-item label="类型" prop="category">
           <el-radio-group v-model="form.category">
@@ -160,18 +160,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="联系方式" prop="contactobject">
-          <el-input v-model="form.contactobject" placeholder="请输入联系方式" />
+          <span>{{ form.contactobject}}</span>
         </el-form-item>
         <el-form-item label="发送时间" prop="pushtime">
-          <el-date-picker clearable
-            v-model="form.pushtime"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="请选择发送时间">
-          </el-date-picker>
+          <span>{{ form.pushtime }}</span>
         </el-form-item>
         <el-form-item label="文件" prop="path">
-          <el-input v-model="form.path" placeholder="请输入文件" />
+          <!-- <file-upload v-model="form.path"/> -->
+          <file-list v-model="form.path"/>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">

@@ -35,6 +35,8 @@ import RightToolbar from '@/components/RightToolbar'
 import Editor from "@/components/Editor"
 // 文件上传组件
 import FileUpload from "@/components/FileUpload"
+// 文件列表组件
+import FileList from "@/components/FileList"
 // 图片上传组件
 import ImageUpload from "@/components/ImageUpload"
 // 图片上传组件副本
@@ -66,6 +68,7 @@ app.component('DictTag', DictTag)
 app.component('Pagination', Pagination)
 app.component('TreeSelect', TreeSelect)
 app.component('FileUpload', FileUpload)
+app.component('FileList', FileList)
 app.component('ImageUpload', ImageUpload)
 app.component('ImageUploadCopy', ImageUploadCopy)
 app.component('ImportDialog', ImportDialog)
