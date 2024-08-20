@@ -105,10 +105,10 @@
 
     <el-table v-loading="loading" :data="fun_adviseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="学号" align="center" prop="stuId" />
-      <el-table-column label="描述" align="center" prop="describes" />
-      <el-table-column label="类型" align="center" prop="category">
+      <el-table-column label="id" align="center" prop="id" width="50" />
+      <el-table-column label="学号" align="center" prop="stuId" width="150" />
+      <el-table-column label="描述" align="center" prop="describes" width="150" />
+      <el-table-column label="类型" align="center" prop="category" width="150">
         <template #default="scope">
           <dict-tag :options="fun_advise_type" :value="scope.row.category"/>
         </template>
@@ -116,11 +116,16 @@
       <el-table-column label="联系方式" align="center" prop="contactobject" />
       <el-table-column label="发送时间" align="center" prop="pushtime" width="180">
         <template #default="scope">
-          <span>{{ parseTime(scope.row.pushtime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.pushtime, '{y}-{m}-{d} {h}-{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件" align="center" prop="path" />
-      <el-table-column label="状态" align="center" prop="status">
+      <!-- <el-table-column label="文件" align="center" prop="path" /> -->
+      <el-table-column label="文件" align="center" prop="path">
+        <template #default="scope">
+          <span><file-list v-model="scope.row.path"/></span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" width="150">
         <template #default="scope">
           <dict-tag :options="fun_advise_status" :value="scope.row.status"/>
         </template>
