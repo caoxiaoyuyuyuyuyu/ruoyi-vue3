@@ -86,13 +86,13 @@
     />
 
     <!-- 添加或修改学校信息对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="500px" append-to-body @close="handleclose" >
       <el-form ref="fun_campusInfoRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="校区名称" prop="campusName">
           <el-input v-model="form.campusName" placeholder="请输入校区名称" />
         </el-form-item>
         <el-divider content-position="center">年级信息信息</el-divider>
-        <el-row :gutter="10" class="mb8">
+        <el-row v-if="add" :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" icon="Plus" @click="handleAddGradeInfo">添加</el-button>
           </el-col>
@@ -101,11 +101,11 @@
           </el-col>
         </el-row>
         <el-table :data="gradeInfoList" :row-class-name="rowGradeInfoIndex" @selection-change="handleGradeInfoSelectionChange" ref="gradeInfo">
-          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column v-if="add" type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
           <el-table-column label="年级名称" prop="gradeName" width="150">
             <template #default="scope">
-              <el-input v-model="scope.row.gradeName" placeholder="请输入年级名称" />
+              <el-input disabled v-model="scope.row.gradeName" placeholder="年级名称" />
             </template>
           </el-table-column>
         </el-table>
@@ -128,6 +128,7 @@ const { proxy } = getCurrentInstance();
 const fun_campusInfoList = ref([]);
 const gradeInfoList = ref([]);
 const open = ref(false);
+const add = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -164,9 +165,13 @@ function getList() {
   });
 }
 
+function handleclose() {
+  add.value=false;
+}
 // 取消按钮
 function cancel() {
   open.value = false;
+  add.value=false;
   reset();
 }
 
@@ -203,6 +208,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
+  add.value = true;
   title.value = "添加学校信息";
 }
 
@@ -233,6 +239,7 @@ function submitForm() {
         addFun_campusInfo(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
+          add.value = false;
           getList();
         });
       }
@@ -290,3 +297,11 @@ function handleExport() {
 
 getList();
 </script>
+<style scoped>
+::v-deep .el-table__body {
+  width: 100% !important;
+}
+::v-deep .el-table__header {
+  width: 100% !important;
+}
+</style>

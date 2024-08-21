@@ -254,3 +254,11 @@ function handleExport() {
 
 getList();
 </script>
+<style scoped>
+::v-deep .el-table__body {
+  width: 100% !important;
+}
+::v-deep .el-table__header {
+  width: 100% !important;
+}
+</style>

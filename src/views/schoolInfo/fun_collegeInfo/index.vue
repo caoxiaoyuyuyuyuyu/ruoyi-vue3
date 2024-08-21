@@ -95,7 +95,7 @@
     />
 
     <!-- 添加或修改学院信息对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="500px" append-to-body @close="handleclose">
       <el-form ref="fun_collegeInfoRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="学院名称" prop="collegeName">
           <el-input v-model="form.collegeName" placeholder="请输入学院名称" />
@@ -104,7 +104,7 @@
           <el-input v-model="form.gradeId" placeholder="请输入年级编号" />
         </el-form-item>
         <el-divider content-position="center">专业信息信息</el-divider>
-        <el-row :gutter="10" class="mb8">
+        <el-row v-if="add" :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" icon="Plus" @click="handleAddMajorInfo">添加</el-button>
           </el-col>
@@ -113,11 +113,11 @@
           </el-col>
         </el-row>
         <el-table :data="majorInfoList" :row-class-name="rowMajorInfoIndex" @selection-change="handleMajorInfoSelectionChange" ref="majorInfo">
-          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column v-if="add" type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
           <el-table-column label="专业名称" prop="majorName" width="150">
             <template #default="scope">
-              <el-input v-model="scope.row.majorName" placeholder="请输入专业名称" />
+              <el-input disabled v-model="scope.row.majorName" placeholder="请输入专业名称" />
             </template>
           </el-table-column>
         </el-table>
@@ -134,12 +134,14 @@
 
 <script setup name="Fun_collegeInfo">
 import { listFun_collegeInfo, getFun_collegeInfo, delFun_collegeInfo, addFun_collegeInfo, updateFun_collegeInfo } from "@/api/schoolInfo/fun_collegeInfo";
+import { ref } from "vue";
 
 const { proxy } = getCurrentInstance();
 
 const fun_collegeInfoList = ref([]);
 const majorInfoList = ref([]);
 const open = ref(false);
+const add = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -184,8 +186,12 @@ function getList() {
 function cancel() {
   open.value = false;
   reset();
+  add.value=false;
 }
 
+function handleclose(){
+  add.value=false;
+}
 // 表单重置
 function reset() {
   form.value = {
@@ -221,6 +227,7 @@ function handleAdd() {
   reset();
   open.value = true;
   title.value = "添加学院信息";
+  add.value = true;
 }
 
 /** 修改按钮操作 */
@@ -250,6 +257,7 @@ function submitForm() {
         addFun_collegeInfo(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
+          add.value=false;
           getList();
         });
       }
@@ -307,3 +315,11 @@ function handleExport() {
 
 getList();
 </script>
+<style scoped>
+::v-deep .el-table__body {
+  width: 100% !important;
+}
+::v-deep .el-table__header {
+  width: 100% !important;
+}
+</style>
