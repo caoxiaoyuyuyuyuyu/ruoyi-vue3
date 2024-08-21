@@ -234,6 +234,7 @@ function uploadedSuccessfully() {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value);
     for (let i = 0; i < fileList.value.length; i++) {
       if(fileList.value[i].url.startsWith("https://") || fileList.value[i].url.startsWith("http://")){
+        console.log("直接存")
       }else{
         //每一项的url属性添加头
         fileList.value[i].url = baseUrl + fileList.value[i].url;

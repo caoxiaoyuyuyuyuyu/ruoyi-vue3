@@ -42,24 +42,31 @@ const { proxy } = getCurrentInstance();
 const emit = defineEmits(['update']);
 const props = defineProps({
     upload: {
-        // 是否显示弹出层（用户导入）
-        open: false,
-        // 弹出层标题（用户导入）
-        title: "默认",
-        // 是否禁用上传
-        isUploading: false,
-        // 是否更新已经存在的用户数据
-        updateSupport: 0,
-        // 设置上传的请求头部
-        headers: { Authorization: "Bearer " + getToken() },
-        // 上传的地址
-        url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData"
+      type: Object,
+      default: () => {
+        return {
+          // 是否显示弹出层（用户导入）
+          open: false,
+          // 弹出层标题（用户导入）
+          title: "默认",
+          // 是否禁用上传
+          isUploading: false,
+          // 是否更新已经存在的用户数据
+          updateSupport: 0,
+          // 设置上传的请求头部
+          headers: { Authorization: "Bearer " + getToken() },
+          // 上传的地址
+          url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData",
+          //下载模板的地址
+          iurl: '/system/user/importTemplate' 
+        }
+      }
     }
 })
 /** 下载模板操作 */
 function importTemplate() {
   console.log("/** 下载模板操作 */") 
-  proxy.download("system/user/importTemplate", {
+  proxy.download(props.upload.iurl, {
  }, `user_template_${new Date().getTime()}.xlsx`);
 };
 /**文件上传中处理 */
