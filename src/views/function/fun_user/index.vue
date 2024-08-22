@@ -156,7 +156,7 @@
           <image-upload :limit="1" v-model="form.avatarUrl"/>
         </el-form-item> -->
         <el-form-item label="头像" prop="avatarUrl">
-          <image-upload-copy :limit="1" v-model="form.avatarUrl"/>
+          <image-upload-copy :userid="form.userid" :limit="1" v-model="form.avatarUrl"/>
         </el-form-item>
         <el-form-item label="权限等级" prop="userLevel">
           <el-radio-group v-model="form.userLevel">
@@ -249,10 +249,10 @@ const upload = reactive({
 });
 
 /** 查询学生信息列表 */
-function getList() {
+async function getList() {
   console.log("查询学生信息列表")
   loading.value = true;
-  listFun_user(queryParams.value).then(response => {
+  await listFun_user(queryParams.value).then(response => {
     fun_userList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -343,6 +343,7 @@ function submitForm() {
 }
 
 /** 删除按钮操作 */
+/** 需要先删除头像的文件 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;
   proxy.$modal.confirm('是否确认删除学生信息编号为"' + _ids + '"的数据项？').then(function() {

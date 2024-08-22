@@ -72,6 +72,11 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  //用户id
+  userid: {
+    type: String,
+    default: ""
+  }
 });
 const imageUpload = ref(null);
 const { proxy } = getCurrentInstance();
@@ -83,6 +88,7 @@ const dialogVisible = ref(false);
 // const baseUrl = import.meta.env.VITE_APP_BASE_API;
 // const baseUrl = "http://localhost:8080";
 const baseUrl = import.meta.env.VITE_APP_ASSETS_PATH
+const miniUrl = import.meta.env.VITE_APP_MINI_API
 const uploadImgUrl = ref(import.meta.env.VITE_APP_BASE_API + "/common/upload"); // 上传的图片服务器地址
 // const uploadImgUrl = "https://william.fit:8889/tencentcloud/www/static"; // 上传的图片服务器地址
 const headers = ref({ Authorization: "Bearer " + getToken() });
@@ -106,7 +112,7 @@ watch(() => props.modelValue, val => {
         // console.log("uploadImgUrl：",uploadImgUrl.value)
         // console.log("item.indexOf(baseUrl)：",item.indexOf(baseUrl))
         if (item.indexOf(baseUrl) === -1) {
-          if(item.startsWith("https://") || item.startsWith("http://")){
+          if(item.startsWith("https://") || item.startsWith("http://") || item.startsWith("D:")){
               item = { name: item, url: item };
           }else{
             item = { name: baseUrl + item, url: baseUrl + item };
@@ -134,11 +140,11 @@ function handleUpload(e) {
   console.log("Upload, file：",e.file)
   const formData = new FormData();
   formData.append('file', e.file);
-  formData.append('userid', "202211070501");
+  formData.append('userid', props.userid);
   // const formData = new FormData();
   // formData.append('file', params.file);
   // // 自定义上传逻辑
-  fetch('https://localhost:8082/upload/updateAvatar', {
+  fetch(miniUrl+'/upload/updateAvatar', {
     method: 'POST',
     body: formData
   })

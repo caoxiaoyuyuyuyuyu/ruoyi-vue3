@@ -55,6 +55,7 @@ const realSrcList = computed(() => {
     }
     return srcList.push(import.meta.env.VITE_APP_BASE_API + item);
   });
+  console.log("realSrcList：",srcList)
   return srcList;
 });
 
