@@ -9,6 +9,14 @@ export function listFun_question(query) {
   })
 }
 
+// 查询问卷中的问题列表
+export function list_question_for_chart(id) {
+  return request({
+    url: '/function/fun_question/chart/' + id,
+    method: 'get',
+  })
+}
+
 // 查询问卷中的问题详细
 export function getFun_question(id) {
   return request({

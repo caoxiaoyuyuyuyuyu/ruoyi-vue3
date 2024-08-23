@@ -118,7 +118,13 @@
           <dict-tag :options="fun_questionnare_type" :value="scope.row.type"/>
         </template>
       </el-table-column>
-      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true" >
+        <template #default="scope">
+            <router-link :to="'/function/fun_questionnaire/fun_question_statistics/chart/index/'+scope.row.id" class="link-type">
+              <span>{{ scope.row.name }}</span>
+            </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="问卷描述" align="center" prop="description" />
       <el-table-column label="开始时间" align="center" prop="startTime" width="180">
         <template #default="scope">

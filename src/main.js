@@ -12,7 +12,6 @@ import App from './App'
 import store from './store'
 import router from './router'
 import directive from './directive' // directive
-
 // 注册指令
 import plugins from './plugins' // plugins
 import { download } from '@/utils/request'
@@ -51,6 +50,8 @@ import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 
+import EChartsComponent from '@/components/EChartsComponent'
+
 const app = createApp(App)
 
 // 全局方法挂载
@@ -75,6 +76,7 @@ app.component('ImportDialog', ImportDialog)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('Editor', Editor)
+app.component('EChartsComponent', EChartsComponent)
 
 app.use(router)
 app.use(store)

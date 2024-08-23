@@ -157,6 +157,20 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
+  },
+  {
+    path: '/function/fun_questionnaire/fun_question_statistics/chart',
+    component: Layout,
+    hidden: true,
+    permissions: ['function:fun_question_statistics:chart'],
+    children: [
+      {
+        path: 'index/:naireId(\\d+)',
+        component: () => import('@/views/function/fun_question_statistics/chart'),
+        name: '问卷统计',
+        meta: { title: '统计数据', activeMenu: '' }
+      }
+    ]
   }
 ]
 
