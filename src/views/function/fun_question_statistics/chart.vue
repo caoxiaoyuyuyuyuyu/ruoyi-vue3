@@ -1,6 +1,28 @@
 <template>
+  <div class="bar">
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="Search"
+          @click="HandleRefresh"
+          v-hasPermi="['function:fun_question_statistics:chart']"
+        >刷新</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="Download"
+          @click="handleExport"
+          v-hasPermi="['function:fun_question_statistics:export']"
+        >导出</el-button>
+      </el-col>
+    </el-row>
+  </div>
   <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-  <div v-for="(chart, index) in chartData" :key="index">
+  <div v-for="(chart, index) in chartData" :key="index + chart.version">
     <transition name="custom-fade">
       <EChartsComponent :chartData="chart.data" :text="chart.name" :subtext="chart.type" />
     </transition>
@@ -20,6 +42,24 @@ const { fun_question_type } = proxy.useDict('fun_question_type');
 const fun_question_statisticsList =ref([]);
 const fun_questionList = ref([]);
 
+
+const data = reactive({
+  // form: {},
+  queryParams: {
+    naireId: null,
+  },
+});
+
+const { queryParams } = toRefs(data);
+
+/** 导出按钮操作 */
+function handleExport() {
+  queryParams.value.naireId=route.params.naireId;
+  proxy.download('function/fun_question_statistics/export', {
+    ...queryParams.value
+  }, `fun_question_statistics_${new Date().getTime()}.xlsx`)
+}
+
 /** 查询问卷中的问题列表 */
 async function getQList() {
   await list_question_for_chart(route.params.naireId).then(response => {
@@ -38,9 +78,8 @@ async function getList() {
     // console.log(fun_question_statisticsList.value);
   });
 }
-const chartData = ref(
-)
-onMounted(async() => {
+    /*刷新按钮操作*/
+async function HandleRefresh() {
   await getQList();
   await getList();
   chartData.value = fun_questionList.value.map(question => {
@@ -56,10 +95,32 @@ onMounted(async() => {
           value: statistics[choices.indexOf(choiceItem)]
         }
       }),
-      type: fun_question_type.value.find(type => type.value === question.type).label
+      type: fun_question_type.value.find(type => type.value === question.type).label,
+      // Add a version to trigger transitions
+      version: Date.now(), // Use current timestamp as version
     };
   })
+}
+
+const chartData = ref()
+onMounted(async() => {
+  await HandleRefresh();
   // console.log(chartData.value);
 });
 
 </script>
+<style scoped>
+.bar{
+  margin: 15px;
+}
+/* Define the animation styles */
+.custom-fade-enter-active,
+.custom-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.custom-fade-enter-from,
+.custom-fade-leave-to {
+  opacity: 0;
+}
+</style>

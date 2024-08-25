@@ -34,7 +34,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -42,7 +42,7 @@
           @click="handleCharts"
           v-hasPermi="['function:fun_question_statistics:chart']"
         >图表</el-button>
-      </el-col>
+      </el-col> -->
        <!--
       <el-col :span="1.5">
         <el-button
@@ -225,10 +225,10 @@ function handleExport() {
 getList();
 
 /** 图表按钮操作 */
-function handleCharts() {
-  console.log("图表按钮操作");
-  this.$router.push({ path: "/function/user", query: {id: "1", name: "若依"} });
-}
+// function handleCharts() {
+//   console.log("图表按钮操作");
+//   this.$router.push({ path: "/function/user", query: {id: "1", name: "若依"} });
+// }
 
 /** 新增按钮操作 */
 // function handleAdd() {
