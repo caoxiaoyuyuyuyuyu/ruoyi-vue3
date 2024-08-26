@@ -196,14 +196,14 @@
           </el-date-picker>
         </el-form-item>
         <el-divider content-position="center">问卷中的问题信息</el-divider>
-        <el-row :gutter="10" class="mb8">
+        <!-- <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" icon="Plus" @click="handleAddFunQuestion">添加</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="danger" icon="Delete" @click="handleDeleteFunQuestion">删除</el-button>
           </el-col>
-        </el-row>
+        </el-row> -->
         <el-table :data="funQuestionList" :row-class-name="rowFunQuestionIndex" @selection-change="handleFunQuestionSelectionChange" ref="funQuestion">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
@@ -215,6 +215,7 @@
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
+                  disabled
                 ></el-option>
               </el-select>
             </template>

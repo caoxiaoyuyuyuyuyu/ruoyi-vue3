@@ -1,4 +1,9 @@
 <template>
+  <div class="title">
+    <!-- 标题栏 -->
+     <el-text type="success" size="large" >{{ naireInfo.name }}</el-text>
+     <dict-tag :options="fun_questionnare_type" :value="naireInfo.type"/>
+  </div>
   <div class="bar">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -34,14 +39,15 @@
 import {ref} from 'vue';
 import { list_statistic_for_chart } from "@/api/function/fun_question_statistics";
 import { list_question_for_chart } from "@/api/function/fun_question";
+import { getFun_questionnaire } from "@/api/function/fun_questionnaire";
 
 const route = useRoute();
 const { proxy } = getCurrentInstance();
-const { fun_question_type } = proxy.useDict('fun_question_type');
+const { fun_question_type,fun_questionnare_type } = proxy.useDict('fun_question_type','fun_questionnare_type');
 
 const fun_question_statisticsList =ref([]);
 const fun_questionList = ref([]);
-
+const naireInfo= ref({});
 
 const data = reactive({
   // form: {},
@@ -58,6 +64,17 @@ function handleExport() {
   proxy.download('function/fun_question_statistics/export', {
     ...queryParams.value
   }, `fun_question_statistics_${new Date().getTime()}.xlsx`)
+}
+
+/** 查询问卷详细 */
+async function getNaire() {
+  await getFun_questionnaire(route.params.naireId).then(response => {
+    console.log(response.data.funQuestionList);
+    naireInfo.value=response.data;
+    // funQuestionList.value = response.data.funQuestionList;
+    fun_questionList.value = response.data.funQuestionList.filter(question => question.type !== "3");
+    
+  });
 }
 
 /** 查询问卷中的问题列表 */
@@ -80,7 +97,8 @@ async function getList() {
 }
     /*刷新按钮操作*/
 async function HandleRefresh() {
-  await getQList();
+  await getNaire();
+  // await getQList();
   await getList();
   chartData.value = fun_questionList.value.map(question => {
     const statistics = fun_question_statisticsList.value.find(statistic => statistic.questionId === question.id).choiceCount.split(",").filter(item => item!=="");
@@ -110,6 +128,14 @@ onMounted(async() => {
 
 </script>
 <style scoped>
+.title{
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
 .bar{
   margin: 15px;
 }
