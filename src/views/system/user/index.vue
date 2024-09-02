@@ -412,6 +412,7 @@ watch(deptName, val => {
 function getDeptTree() {
   deptTreeSelect().then(response => {
     deptOptions.value = response.data;
+    console.log(response.data);
   });
 };
 /** 查询用户列表 */
