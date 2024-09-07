@@ -205,6 +205,7 @@ const { queryParams, form, rules } = toRefs(data);
 function getList() {
   loading.value = true;
   listFun_hygiene(queryParams.value).then(response => {
+    console.log(response.rows);
     fun_hygieneList.value = response.rows;
     total.value = response.total;
     loading.value = false;

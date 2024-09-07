@@ -104,6 +104,7 @@ service.interceptors.response.use(res => {
       ElNotification.error({ title: msg })
       return Promise.reject('error')
     } else {
+      console.log('res', res)
       return  Promise.resolve(res.data)
     }
   },
