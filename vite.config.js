@@ -30,11 +30,17 @@ export default defineConfig(({ mode, command }) => {
       open: true,
       proxy: {
         // https://cn.vitejs.dev/config/#server-proxy
-        '/dev-api': {
-          target: 'http://localhost:8080',
-          // target: 'https://api.wzs.pub/mock/13',
+        "/dev-api": {
+          target: 'http://william.fit:8080',
+          // target: 'http://localhost:8080',
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, '')
+        },
+        [process.env.VITE_APP_BASE_API]: {
+          // target: 'http://william.fit:8080',
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          rewrite: (p) => p.replace(process.env.VITE_APP_BASE_API, '')
         }
       }
     },
