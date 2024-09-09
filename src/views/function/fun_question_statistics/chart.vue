@@ -72,8 +72,12 @@ async function getNaire() {
     console.log(response.data.funQuestionList);
     naireInfo.value=response.data;
     // funQuestionList.value = response.data.funQuestionList;
-    fun_questionList.value = response.data.funQuestionList.filter(question => question.type !== "3");
-    
+    fun_questionList.value = response.data.funQuestionList.filter(question => {
+      let type = fun_question_type.value.find(type => type.value===question.type)
+      // .label.indexOf("选")!==-1
+      return type&&type.label.indexOf("选")!==-1;
+    });
+    console.log("fun_questionList",fun_questionList.value)
   });
 }
 
@@ -89,10 +93,10 @@ async function getQList() {
 /** 查询问卷作答统计列表 */
 async function getList() {
   await list_statistic_for_chart(route.params.naireId).then(response => {
-    // console.log(response);
+    console.log(response);
     fun_question_statisticsList.value = response.data;
-    // console.log(fun_question_type.value);
-    // console.log(fun_question_statisticsList.value);
+    console.log("fun_question_type.value)",fun_question_type.value);
+    console.log(fun_question_statisticsList.value);
   });
 }
     /*刷新按钮操作*/
@@ -110,7 +114,7 @@ async function HandleRefresh() {
       data: JSON.parse(question.content).map(choiceItem => {
         return {
           name: choiceItem,
-          value: statistics[choices.indexOf(choiceItem)]
+          value: Number(statistics[choices.indexOf(choiceItem)])
         }
       }),
       type: fun_question_type.value.find(type => type.value === question.type).label,
