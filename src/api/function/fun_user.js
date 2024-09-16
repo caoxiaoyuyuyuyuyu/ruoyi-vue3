@@ -36,6 +36,14 @@ export function updateFun_user(data) {
   })
 }
 
+//根据学号查找信息
+export function getFun_userByUserId(userId) {
+  return request({
+    url: '/function/fun_user/getUserInfo/' + userId,
+    method: 'get'
+  })
+}
+
 // 删除学生信息
 export async function delFun_user(id) {
   // 删除逻辑
@@ -66,4 +74,18 @@ export async function delFun_user(id) {
     console.error('上传失败:', error);
     throw error; // 抛出错误以便外部捕获
   }
+}
+
+//获取学生学校班级信息
+export async function getSchoolInfo(userid) {
+  const response = await fetch(miniUrl+'/school-info/getClassinfo?userid='+userid, {
+    method: 'GET',
+    body: null
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  // 如果服务器返回的是JSON数据
+  return await response.json(); 
 }

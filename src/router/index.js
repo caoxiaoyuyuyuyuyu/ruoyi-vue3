@@ -171,6 +171,48 @@ export const dynamicRoutes = [
         meta: { title: '统计数据', activeMenu: '' }
       }
     ]
+  },
+  {
+    path: '/function/leave_post/postDetail',
+    component: Layout,
+    hidden: true,
+    permissions: ['function:leave_post:list'],
+    children: [
+      {
+        path: 'index/:postId(\\d+)',
+        component: () => import('@/views/function/leave_post/postDetail'),
+        name: 'PostDetail',
+        meta: { title: '请假条详情', activeMenu: '' }
+      }
+    ]
+  },
+  {
+    path: '/function/leave_post/postDetail',
+    component: Layout,
+    hidden: true,
+    permissions: ['function:leave_post:list'],
+    children: [
+      {
+        path: 'index/:postId(\\d+)',
+        component: () => import('@/views/function/leave_post/postDetail'),
+        name: 'PostDetail',
+        meta: { title: '请假条详情', activeMenu: '' }
+      }
+    ]
+  },
+  {
+    path: '/function/fun_user/funUserDetail',
+    component: Layout,
+    hidden: true,
+    permissions: ['function:fun_user:list'],
+    children: [
+      {
+        path: 'index/:userId(\\d+)',
+        component: () => import('@/views/function/fun_user/funUserDetail'),
+        name: 'funUserDetail',
+        meta: { title: '用户信息详情', activeMenu: '' }
+      }
+    ]
   }
 ]
 
