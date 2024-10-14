@@ -107,7 +107,13 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="学号" align="center" prop="userId" />
-      <el-table-column label="学生姓名" align="center" prop="trueName" />
+      <el-table-column label="学生姓名" align="center" prop="trueName" >
+        <template #default="scope">
+          <router-link :to="'/function/fun_user/funUserDetail/index/'+scope.row.userId" class="link-type">
+            {{ scope.row.trueName }}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="是否离校" align="center" prop="isOut">
         <template #default="scope">
           <dict-tag :options="fun_leave_type" :value="scope.row.isOut"/>

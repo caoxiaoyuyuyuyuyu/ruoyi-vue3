@@ -95,7 +95,7 @@
     <el-table v-loading="loading" :data="fun_userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="标题" align="center">
+      <el-table-column label="微信" align="center">
         <template #default="scope">
          {{ scope.row.openid? '已绑定' : '未绑定' }}
         </template>
